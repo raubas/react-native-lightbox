@@ -88,9 +88,13 @@ export default class LightboxOverlay extends Component {
     this._panResponder = PanResponder.create({
       // Ask to be the responder:
       onStartShouldSetPanResponder: (evt, gestureState) => !this.state.isAnimating,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => !this.state.isAnimating,
+      onStartShouldSetPanResponderCapture: ({ nativeEvent: { touches } }, { vx, vy }) => {
+        return Math.abs(vy) > Math.abs(vx) && !this.state.isAnimating
+      },
       onMoveShouldSetPanResponder: (evt, gestureState) => !this.state.isAnimating,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => !this.state.isAnimating,
+      onMoveShouldSetPanResponderCapture: ({ nativeEvent: { touches } }, { vx, vy }) => {
+        return Math.abs(vy) > Math.abs(vx) && !this.state.isAnimating
+      },
 
       onPanResponderGrant: (evt, gestureState) => {
         this.state.pan.setValue(0);
