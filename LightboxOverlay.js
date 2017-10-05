@@ -84,16 +84,24 @@ export default class LightboxOverlay extends Component {
     openVal: new Animated.Value(0),
   };
 
+  isVerticalGesture = (vx, vy) => {
+    return Math.abs(vy) > Math.abs(vx)
+  }
+
   componentWillMount() {
     this._panResponder = PanResponder.create({
       // Ask to be the responder:
-      onStartShouldSetPanResponder: (evt, gestureState) => !this.state.isAnimating,
-      onStartShouldSetPanResponderCapture: ({ nativeEvent: { touches } }, { vx, vy }) => {
-        return Math.abs(vy) > Math.abs(vx) && !this.state.isAnimating
+      onStartShouldSetPanResponder: ({ nativeEvent: { touches } }, { vx, vy }) => {
+        return this.isVerticalGesture(vx, vy) && !this.state.isAnimating
       },
-      onMoveShouldSetPanResponder: (evt, gestureState) => !this.state.isAnimating,
+      onStartShouldSetPanResponderCapture: ({ nativeEvent: { touches } }, { vx, vy }) => {
+        return this.isVerticalGesture(vx, vy) && !this.state.isAnimating
+      },
+      onMoveShouldSetPanResponder: ({ nativeEvent: { touches } }, { vx, vy }) => {
+        return this.isVerticalGesture(vx, vy) && !this.state.isAnimating
+      },
       onMoveShouldSetPanResponderCapture: ({ nativeEvent: { touches } }, { vx, vy }) => {
-        return Math.abs(vy) > Math.abs(vx) && !this.state.isAnimating
+        return this.isVerticalGesture(vx, vy) && !this.state.isAnimating
       },
 
       onPanResponderGrant: (evt, gestureState) => {
